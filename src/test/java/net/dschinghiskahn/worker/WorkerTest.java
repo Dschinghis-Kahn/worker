@@ -53,7 +53,7 @@ public class WorkerTest {
 
     @Test(timeout = 1000)
     public void canStop() throws InterruptedException {
-        Logger.getLogger(WorkerTest.class).info("Running test: canStop()");
+        Logger.getLogger(getClass()).info("Running test: canStop()");
         small();
         for (AbstractWorker<String> worker : workers) {
             worker.stop();
@@ -63,31 +63,31 @@ public class WorkerTest {
 
     @Test(timeout = 1000)
     public void small() throws InterruptedException {
-        Logger.getLogger(WorkerTest.class).info("Running test: small()");
+        Logger.getLogger(getClass()).info("Running test: small()");
         testRun(10, 1);
     }
 
     @Test(timeout = 1000)
     public void large() throws InterruptedException {
-        Logger.getLogger(WorkerTest.class).info("Running test: large()");
+        Logger.getLogger(getClass()).info("Running test: large()");
         testRun(1000, 1);
     }
 
     @Test(timeout = 1000)
     public void smallMultiThread() throws InterruptedException {
-        Logger.getLogger(WorkerTest.class).info("Running test: smallMultiThread()");
+        Logger.getLogger(getClass()).info("Running test: smallMultiThread()");
         testRun(10, 10);
     }
 
     @Test(timeout = 1000)
     public void largeMultiThread() throws InterruptedException {
-        Logger.getLogger(WorkerTest.class).info("Running test: largeMultiThread()");
+        Logger.getLogger(getClass()).info("Running test: largeMultiThread()");
         testRun(1000, 10);
     }
 
     @Test(timeout = 1000)
     public void canWait() throws InterruptedException {
-        Logger.getLogger(WorkerTest.class).info("Running test: canWait()");
+        Logger.getLogger(getClass()).info("Running test: canWait()");
         TestWorker worker = new TestWorker();
         workers.add(worker);
         worker.start();
@@ -130,7 +130,7 @@ public class WorkerTest {
 
     @Test(timeout = 1000)
     public void canWakeUp() throws InterruptedException {
-        Logger.getLogger(WorkerTest.class).info("Running test: canWakeUp()");
+        Logger.getLogger(getClass()).info("Running test: canWakeUp()");
         queue.add("1");
 
         AbstractWorker<String> worker = new TestWorker();
@@ -155,7 +155,7 @@ public class WorkerTest {
 
     @Test(timeout = 5000)
     public void suspendTime() throws InterruptedException {
-        Logger.getLogger(WorkerTest.class).info("Running test: suspendTime()");
+        Logger.getLogger(getClass()).info("Running test: suspendTime()");
         timeout = 1000L;
 
         TestWorker worker = new TestWorker();

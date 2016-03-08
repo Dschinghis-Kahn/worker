@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
  */
 public abstract class AbstractWorker<E> implements Runnable {
 
-    private final Logger logger = Logger.getLogger(getClass().getName()); // NOPMD
+    private final Logger logger = Logger.getLogger(getClass()); // NOPMD
     private Thread thread;
     private boolean running;
     private int workerId;
