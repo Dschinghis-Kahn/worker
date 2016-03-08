@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>worker</artifactId>
 	<groupId>net.dschinghis-kahn</groupId>
-	<version>1.0</version>
+	<version>1.1-SNAPSHOT</version>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>An intelligent java thread implementation.</description>
 	<url>https://github.com/Dschinghis-Kahn/worker</url>
@@ -22,7 +22,7 @@
 		<url>https://github.com/Dschinghis-Kahn/worker</url>
 		<developerConnection>scm:git:ssh://git@github.com/Dschinghis-Kahn/worker.git</developerConnection>
 		<connection>scm:git:ssh://git@github.com/Dschinghis-Kahn/worker.git</connection>
-    <tag>worker-1.0</tag>
+    <tag>HEAD</tag>
   </scm>
 	<distributionManagement>
 		<snapshotRepository>
