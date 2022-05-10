@@ -2,7 +2,8 @@ package net.dschinghiskahn.worker;
 
 import java.lang.Thread.State;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This object provides several methods in order to implement an efficient
@@ -13,7 +14,7 @@ import org.apache.log4j.Logger;
  */
 public abstract class AbstractWorker<E> implements Runnable {
 
-    private final Logger logger = Logger.getLogger(getClass()); // NOPMD
+    private final Logger logger = LogManager.getLogger(getClass()); // NOPMD
     private Thread thread;
     private boolean running;
     private int workerId;

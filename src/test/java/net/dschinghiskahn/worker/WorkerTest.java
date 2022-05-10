@@ -5,17 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
+import org.apache.logging.log4j.LogManager;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-@SuppressWarnings("PMD")
 public class WorkerTest {
 
     private final Queue<String> queue = new LinkedList<String>();
@@ -23,16 +18,6 @@ public class WorkerTest {
     private boolean result;
     private List<String> allItems;
     private Long timeout;
-
-    @BeforeClass
-    public static void init() {
-        Logger.getRootLogger().setLevel(Level.INFO);
-        Logger.getRootLogger().removeAllAppenders();
-        ConsoleAppender appender = new ConsoleAppender();
-        appender.setLayout(new PatternLayout("%d %-5p: %m%n"));
-        appender.activateOptions();
-        Logger.getRootLogger().addAppender(appender);
-    }
 
     @Before
     public void start() {
@@ -53,7 +38,7 @@ public class WorkerTest {
 
     @Test(timeout = 1000)
     public void canStop() throws InterruptedException {
-        Logger.getLogger(getClass()).info("Running test: canStop()");
+        LogManager.getLogger(getClass()).info("Running test: canStop()");
         small();
         for (AbstractWorker<String> worker : workers) {
             worker.stop();
@@ -63,31 +48,31 @@ public class WorkerTest {
 
     @Test(timeout = 1000)
     public void small() throws InterruptedException {
-        Logger.getLogger(getClass()).info("Running test: small()");
+        LogManager.getLogger(getClass()).info("Running test: small()");
         testRun(10, 1);
     }
 
     @Test(timeout = 1000)
     public void large() throws InterruptedException {
-        Logger.getLogger(getClass()).info("Running test: large()");
+        LogManager.getLogger(getClass()).info("Running test: large()");
         testRun(1000, 1);
     }
 
     @Test(timeout = 1000)
     public void smallMultiThread() throws InterruptedException {
-        Logger.getLogger(getClass()).info("Running test: smallMultiThread()");
+        LogManager.getLogger(getClass()).info("Running test: smallMultiThread()");
         testRun(10, 10);
     }
 
     @Test(timeout = 1000)
     public void largeMultiThread() throws InterruptedException {
-        Logger.getLogger(getClass()).info("Running test: largeMultiThread()");
+        LogManager.getLogger(getClass()).info("Running test: largeMultiThread()");
         testRun(1000, 10);
     }
 
     @Test(timeout = 1000)
     public void canWait() throws InterruptedException {
-        Logger.getLogger(getClass()).info("Running test: canWait()");
+        LogManager.getLogger(getClass()).info("Running test: canWait()");
         TestWorker worker = new TestWorker();
         workers.add(worker);
         worker.start();
@@ -130,7 +115,7 @@ public class WorkerTest {
 
     @Test(timeout = 1000)
     public void canWakeUp() throws InterruptedException {
-        Logger.getLogger(getClass()).info("Running test: canWakeUp()");
+        LogManager.getLogger(getClass()).info("Running test: canWakeUp()");
         queue.add("1");
 
         AbstractWorker<String> worker = new TestWorker();
@@ -155,7 +140,7 @@ public class WorkerTest {
 
     @Test(timeout = 5000)
     public void suspendTime() throws InterruptedException {
-        Logger.getLogger(getClass()).info("Running test: suspendTime()");
+        LogManager.getLogger(getClass()).info("Running test: suspendTime()");
         timeout = 1000L;
 
         TestWorker worker = new TestWorker();
