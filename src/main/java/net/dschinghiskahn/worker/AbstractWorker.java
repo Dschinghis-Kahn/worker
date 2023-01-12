@@ -2,9 +2,6 @@ package net.dschinghiskahn.worker;
 
 import java.lang.Thread.State;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * This object provides several methods in order to implement an efficient
  * worker that e.g. processes items from a queue.
@@ -14,7 +11,6 @@ import org.apache.logging.log4j.Logger;
  */
 public abstract class AbstractWorker<E> implements Runnable {
 
-    private final Logger logger = LogManager.getLogger(getClass()); // NOPMD
     private Thread thread;
     private boolean running;
     private int workerId;
@@ -91,13 +87,15 @@ public abstract class AbstractWorker<E> implements Runnable {
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
-                    logger.error("Thread was interrupted", e);
+                    hookInterrupted(e);
                 }
             }
 
             AbstractWorker.threadCount--;
         }
     }
+
+	protected void hookInterrupted(InterruptedException e) {}
 
     /**
      * Returns the id of the worker. The id is a sequence number that is
@@ -135,9 +133,7 @@ public abstract class AbstractWorker<E> implements Runnable {
                     item = getWork();
                 } else {
                     time = getSuspendTime();
-                    if (logger.isDebugEnabled()) {
-                        logger.debug(getThread().getName() + " - Suspending");
-                    }
+                    hookPreSuspend();
                     try {
                         suspended = true;
                         if (time == null) {
@@ -148,21 +144,26 @@ public abstract class AbstractWorker<E> implements Runnable {
                     } catch (InterruptedException e) {
                         // ignore
                     }
-                    if (logger.isDebugEnabled()) {
-                        logger.debug(getThread().getName() + " - Waking up");
-                    }
+                    hookPostWakeup();
                 }
             }
             if (suspended) {
                 suspended = false;
             } else {
-                if (logger.isDebugEnabled()) {
-                    logger.debug(getThread().getName() + " - Doing work");
-                }
+                hookPreWorking();
                 doWork(item);
+                hookPostWorking();
             }
         }
     }
+
+    protected void hookPostWorking() {}
+    
+	protected void hookPreWorking() {}
+
+	protected void hookPostWakeup() {}
+
+	protected void hookPreSuspend() {}
 
     /**
      * This method is called by the worker as soon as {@link #isWorkAvailable()}
@@ -234,4 +235,5 @@ public abstract class AbstractWorker<E> implements Runnable {
     public Thread getThread() {
         return thread;
     }
+    
 }

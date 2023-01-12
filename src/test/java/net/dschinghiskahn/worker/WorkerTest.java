@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import org.apache.logging.log4j.LogManager;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,185 +12,185 @@ import org.junit.Test;
 
 public class WorkerTest {
 
-    private final Queue<String> queue = new LinkedList<String>();
-    private final List<AbstractWorker<String>> workers = new ArrayList<AbstractWorker<String>>();
-    private boolean result;
-    private List<String> allItems;
-    private Long timeout;
+	private final Queue<String> queue = new LinkedList<String>();
+	private final List<AbstractWorker<String>> workers = new ArrayList<AbstractWorker<String>>();
+	private boolean result;
+	private List<String> allItems;
+	private Long timeout;
 
-    @Before
-    public void start() {
-        queue.clear();
-        workers.clear();
-        result = true;
-        allItems = new ArrayList<String>();
-        timeout = null;
+	@Before
+	public void start() {
+		queue.clear();
+		workers.clear();
+		result = true;
+		allItems = new ArrayList<String>();
+		timeout = null;
 
-    }
+	}
 
-    @After
-    public void stop() {
-        for (AbstractWorker<String> worker : workers) {
-            worker.stop();
-        }
-    }
+	@After
+	public void stop() {
+		for (AbstractWorker<String> worker : workers) {
+			worker.stop();
+		}
+	}
 
-    @Test(timeout = 1000)
-    public void canStop() throws InterruptedException {
-        LogManager.getLogger(getClass()).info("Running test: canStop()");
-        small();
-        for (AbstractWorker<String> worker : workers) {
-            worker.stop();
-            Assert.assertTrue(!worker.getThread().isAlive());
-        }
-    }
+	@Test(timeout = 1000)
+	public void canStop() throws InterruptedException {
+		System.out.println(getClass().getSimpleName() + " - Running test: canStop()");
+		small();
+		for (AbstractWorker<String> worker : workers) {
+			worker.stop();
+			Assert.assertTrue(!worker.getThread().isAlive());
+		}
+	}
 
-    @Test(timeout = 1000)
-    public void small() throws InterruptedException {
-        LogManager.getLogger(getClass()).info("Running test: small()");
-        testRun(10, 1);
-    }
+	@Test(timeout = 1000)
+	public void small() throws InterruptedException {
+		System.out.println(getClass().getSimpleName() + " - Running test: small()");
+		testRun(10, 1);
+	}
 
-    @Test(timeout = 1000)
-    public void large() throws InterruptedException {
-        LogManager.getLogger(getClass()).info("Running test: large()");
-        testRun(1000, 1);
-    }
+	@Test(timeout = 1000)
+	public void large() throws InterruptedException {
+		System.out.println(getClass().getSimpleName() + " - Running test: large()");
+		testRun(1000, 1);
+	}
 
-    @Test(timeout = 1000)
-    public void smallMultiThread() throws InterruptedException {
-        LogManager.getLogger(getClass()).info("Running test: smallMultiThread()");
-        testRun(10, 10);
-    }
+	@Test(timeout = 1000)
+	public void smallMultiThread() throws InterruptedException {
+		System.out.println(getClass().getSimpleName() + " - Running test: smallMultiThread()");
+		testRun(10, 10);
+	}
 
-    @Test(timeout = 1000)
-    public void largeMultiThread() throws InterruptedException {
-        LogManager.getLogger(getClass()).info("Running test: largeMultiThread()");
-        testRun(1000, 10);
-    }
+	@Test(timeout = 1000)
+	public void largeMultiThread() throws InterruptedException {
+		System.out.println(getClass().getSimpleName() + " - Running test: largeMultiThread()");
+		testRun(1000, 10);
+	}
 
-    @Test(timeout = 1000)
-    public void canWait() throws InterruptedException {
-        LogManager.getLogger(getClass()).info("Running test: canWait()");
-        TestWorker worker = new TestWorker();
-        workers.add(worker);
-        worker.start();
+	@Test(timeout = 1000)
+	public void canWait() throws InterruptedException {
+		System.out.println(getClass().getSimpleName() + " - Running test: canWait()");
+		TestWorker worker = new TestWorker();
+		workers.add(worker);
+		worker.start();
 
-        Thread.sleep(100);
+		Thread.sleep(100);
 
-        queue.add("1");
-        allItems.add("1");
-        worker.wakeUpAllWorkers();
+		queue.add("1");
+		allItems.add("1");
+		worker.wakeUpAllWorkers();
 
-        while (!queue.isEmpty()) {
-            Thread.sleep(100);
-        }
-    }
+		while (!queue.isEmpty()) {
+			Thread.sleep(100);
+		}
+	}
 
-    private void testRun(int itemCount, int threadCount) throws InterruptedException {
-        for (int i = 0; i < itemCount; i++) {
-            queue.add(String.valueOf(i));
-            allItems.add(String.valueOf(i));
-        }
+	private void testRun(int itemCount, int threadCount) throws InterruptedException {
+		for (int i = 0; i < itemCount; i++) {
+			queue.add(String.valueOf(i));
+			allItems.add(String.valueOf(i));
+		}
 
-        for (int i = 0; i < threadCount; i++) {
-            TestWorker worker = new TestWorker();
-            workers.add(worker);
-            worker.start();
-        }
+		for (int i = 0; i < threadCount; i++) {
+			TestWorker worker = new TestWorker();
+			workers.add(worker);
+			worker.start();
+		}
 
-        while (!queue.isEmpty()) {
-            Thread.sleep(100);
-        }
+		while (!queue.isEmpty()) {
+			Thread.sleep(100);
+		}
 
-        for (AbstractWorker<String> worker : workers) {
-            while (!worker.isSuspended()) {
-                Thread.sleep(100);
-            }
-        }
+		for (AbstractWorker<String> worker : workers) {
+			while (!worker.isSuspended()) {
+				Thread.sleep(100);
+			}
+		}
 
-        Assert.assertTrue(result);
-    }
+		Assert.assertTrue(result);
+	}
 
-    @Test(timeout = 1000)
-    public void canWakeUp() throws InterruptedException {
-        LogManager.getLogger(getClass()).info("Running test: canWakeUp()");
-        queue.add("1");
+	@Test(timeout = 1000)
+	public void canWakeUp() throws InterruptedException {
+		System.out.println(getClass().getSimpleName() + " - Running test: canWakeUp()");
+		queue.add("1");
 
-        AbstractWorker<String> worker = new TestWorker();
-        worker.start();
+		AbstractWorker<String> worker = new TestWorker();
+		worker.start();
 
-        while (!worker.isSuspended()) {
-            Thread.sleep(100);
-        }
+		while (!worker.isSuspended()) {
+			Thread.sleep(100);
+		}
 
-        queue.add("2");
+		queue.add("2");
 
-        worker.wakeUpAllWorkers();
+		worker.wakeUpAllWorkers();
 
-        Thread.sleep(100);
+		Thread.sleep(100);
 
-        while (!worker.isSuspended()) {
-            Thread.sleep(100);
-        }
+		while (!worker.isSuspended()) {
+			Thread.sleep(100);
+		}
 
-        Assert.assertTrue(queue.isEmpty());
-    }
+		Assert.assertTrue(queue.isEmpty());
+	}
 
-    @Test(timeout = 5000)
-    public void suspendTime() throws InterruptedException {
-        LogManager.getLogger(getClass()).info("Running test: suspendTime()");
-        timeout = 1000L;
+	@Test(timeout = 5000)
+	public void suspendTime() throws InterruptedException {
+		System.out.println(getClass().getSimpleName() + " - Running test: suspendTime()");
+		timeout = 1000L;
 
-        TestWorker worker = new TestWorker();
-        worker.start();
+		TestWorker worker = new TestWorker();
+		worker.start();
 
-        while (!worker.isSuspended()) {
-            Thread.sleep(10);
-        }
+		while (!worker.isSuspended()) {
+			Thread.sleep(10);
+		}
 
-        long startTime = System.currentTimeMillis();
+		long startTime = System.currentTimeMillis();
 
-        queue.add("0");
+		queue.add("0");
 
-        while (!queue.isEmpty()) {
-            Thread.sleep(10);
-        }
+		while (!queue.isEmpty()) {
+			Thread.sleep(10);
+		}
 
-        long duration = System.currentTimeMillis() - startTime;
-        Assert.assertTrue(duration > 900);
-        Assert.assertTrue(queue.isEmpty());
-    }
+		long duration = System.currentTimeMillis() - startTime;
+		Assert.assertTrue(duration > 900);
+		Assert.assertTrue(queue.isEmpty());
+	}
 
-    private class TestWorker extends AbstractWorker<String> {
+	private class TestWorker extends AbstractWorker<String> {
 
-        TestWorker() {
-            super("TestWorker");
-        }
+		TestWorker() {
+			super("TestWorker");
+		}
 
-        @Override
-        protected void doWork(String item) {
-            synchronized (allItems) {
-                if (!allItems.contains(item)) {
-                    result = false;
-                }
-                allItems.remove(item);
-            }
-        }
+		@Override
+		protected void doWork(String item) {
+			synchronized (allItems) {
+				if (!allItems.contains(item)) {
+					result = false;
+				}
+				allItems.remove(item);
+			}
+		}
 
-        @Override
-        protected String getWork() {
-            return queue.poll();
-        }
+		@Override
+		protected String getWork() {
+			return queue.poll();
+		}
 
-        @Override
-        protected boolean isWorkAvailable() {
-            return !queue.isEmpty();
-        }
+		@Override
+		protected boolean isWorkAvailable() {
+			return !queue.isEmpty();
+		}
 
-        @Override
-        protected Long getSuspendTime() {
-            return timeout;
-        }
-    }
+		@Override
+		protected Long getSuspendTime() {
+			return timeout;
+		}
+	}
 }
